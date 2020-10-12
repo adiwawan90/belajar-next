@@ -1,11 +1,15 @@
+import { NextPage, NextPageContext } from 'next';
 import { useRouter } from 'next/router';
-import { Link } from 'next/link';
 import {useState, useEffect} from 'react';
+import { VehiclePerson } from '../../../api/VehiclePerson';
 
-const Hay = ({ownersList, ctx}) => {
+export interface PersonProps {
+    ownersList?: VehiclePerson[];
+}
+
+const Person = ({ownersList}: PersonProps) => {
     const router = useRouter();
 
-    console.log('ini ctx: ',ctx);
     const {vehicle, person} = router.query;
 
     const [owners, setOwners] = useState(ownersList);
@@ -13,10 +17,10 @@ const Hay = ({ownersList, ctx}) => {
     useEffect(() => {
         const loadData = async () => {
             const response = await fetch('https://jsonplaceholder.typicode.com/users');
-            const ownersList = await response.json();
+            const ownersList: VehiclePerson[] | undefined = await response.json();
             setOwners(ownersList)
         }
-        if (ownersList.length == 0){
+        if (ownersList?.length == 0){
             loadData();
         }
     },[])
@@ -32,15 +36,15 @@ const Hay = ({ownersList, ctx}) => {
     )
 }
 
-export default Hay
+export default Person
 
-Hay.getInitialProps = async ctx => {
-    if(!ctx.req) {
+Person.getInitialProps = async ({query, req}: NextPageContext) => {
+    if(!req) {
         return {ownersList: []}
     }
-   const { query } = ctx;
+    
     const response = await fetch('https://jsonplaceholder.typicode.com/users');
-    const ownersList = await response.json();
+    const ownersList: VehiclePerson[] | undefined = await response.json();
 
     return {
         // owners: [
@@ -54,7 +58,6 @@ Hay.getInitialProps = async ctx => {
         //     },
             
         // ]
-        ownersList: ownersList,
-        ctx
+        ownersList: ownersList
     }
 }
