@@ -7,6 +7,10 @@ export function Homepage() {
             <Link href="/people">
                 <a href="">people</a>
             </Link>
+            <br/>
+            <Link href="/vehicles">
+                <a href="">vehicles</a>
+            </Link>
         </div>
     )
 }
