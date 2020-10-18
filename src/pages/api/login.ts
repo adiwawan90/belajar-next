@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import sqlite from 'sqlite';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { secret } from '../../../api/secret';
 
 // export default async function getAllVehicles(req:NextApiRequest, res:NextApiResponse) {
 //     const id = req.query.id
@@ -24,7 +25,7 @@ export default async function login(req:NextApiRequest,res: NextApiResponse) {
         if(!err && result) {
             // menggunakan JWT
             const claims = {sub: person.id, myPersonEmail:person.email}
-            const token = jwt.sign(claims, 'cb9fba29-e4ed-447f-aa37-96d40db37b69', { expiresIn: '1h' })
+            const token = jwt.sign(claims, secret, { expiresIn: '1h' })
             res.json({message: 'OK', authToken: token})
         } else {
             res.json({message: 'Oops, something went wrong'})
