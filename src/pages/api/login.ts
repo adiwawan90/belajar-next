@@ -3,6 +3,7 @@ import sqlite from 'sqlite';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { secret } from '../../../api/secret';
+import cookie from 'cookie';
 
 // export default async function getAllVehicles(req:NextApiRequest, res:NextApiResponse) {
 //     const id = req.query.id
@@ -26,7 +27,16 @@ export default async function login(req:NextApiRequest,res: NextApiResponse) {
             // menggunakan JWT
             const claims = {sub: person.id, myPersonEmail:person.email}
             const token = jwt.sign(claims, secret, { expiresIn: '1h' })
-            res.json({message: 'OK', authToken: token})
+
+            // adding cookie
+            res.setHeader('Set-Cookie', cookie.serialize('auth', token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV !== 'development',
+                sameSite: 'strict',
+                maxAge: 3600, // sesuai dgn lama token,
+                path: '/'
+            }))
+            res.json({message: 'welcomeback to the App!', authToken: token})
         } else {
             res.json({message: 'Oops, something went wrong'})
         }
