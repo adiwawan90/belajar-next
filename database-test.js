@@ -8,6 +8,8 @@ async function setup(){
     console.log('ALL PERSON: ', person, null, 2);
     const vehicle = await db.all('SELECT * FROM vehicle');
     console.log('ALL VEHICLE: ', vehicle, null, 2);
+    const microphones = await db.all('select * from microphone');
+    console.log(JSON.stringify(microphones, null, 4));
 }
 
 setup();
